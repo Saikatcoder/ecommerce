@@ -92,7 +92,7 @@ const Order = () => {
       title: 'Address',
       key:'address',
       render:()=>(
-        <label class></label>
+        <label className="text-gray-400">Bishnupur, krishnaganj , kailashatala</label>
       )
     },
     {
