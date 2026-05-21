@@ -18,6 +18,10 @@ price:{
     type:Number,
     required:true
 },
+quantity:{
+  type : Number,
+  required: true
+},
 discount:{
     type:Number,
     rquired:true,
@@ -33,5 +37,5 @@ productSchema.pre('save', function(){
 })
 
 
-const ProductModel = models.productSchema || model('product', productSchema)
+const ProductModel = models.product || model('product', productSchema)
 export default ProductModel
