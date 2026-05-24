@@ -1,6 +1,7 @@
 interface SlugInterface {
     params:{
         slug :string
+        title?:string
     }
 }
 

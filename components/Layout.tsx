@@ -6,7 +6,6 @@ import { FC } from 'react'
 import Logo from './shared/logo'
 import Link from 'next/link'
 import { UserAddOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
 import { usePathname } from 'next/navigation'
 
 const menus = [
@@ -68,7 +67,7 @@ const Layout: FC<ChildrenInterface> = ({children}) => {
           {/* Signup Button */}
           <Link
             href='/signup'
-            className='!bg-green-500 hover:!bg-green-600 !border-none !rounded-lg !ml-3'
+            className='px-5 py-3 !bg-green-500 hover:!bg-green-600 !border-none !rounded-lg !ml-3'
           >
             <UserAddOutlined />
             Sign Up
