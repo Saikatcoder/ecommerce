@@ -25,6 +25,7 @@ const menus = [
     label: 'Sign in',
     href: '/login',
   },
+  
 ]
 
 const Layout: FC<ChildrenInterface> = ({children}) => {
@@ -33,7 +34,8 @@ const Layout: FC<ChildrenInterface> = ({children}) => {
   const blackList = [
     '/admin',
     '/login',
-    '/signup'
+    '/signup',
+    '/user'
   ]
 
   const isBalckList = blackList.some((path)=>pathName.startsWith(path))
