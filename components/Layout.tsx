@@ -5,8 +5,10 @@ import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { FC } from 'react'
 import Logo from './shared/logo'
 import Link from 'next/link'
-import { UserAddOutlined } from '@ant-design/icons'
+import { LoginOutlined, ProfileOutlined, SettingOutlined, UserAddOutlined } from '@ant-design/icons'
 import { usePathname } from 'next/navigation'
+import { Avatar, Dropdown } from 'antd'
+import {  useSession } from 'next-auth/react'
 
 const menus = [
   {
@@ -15,22 +17,47 @@ const menus = [
   },
   {
     label: 'Products',
-    href: '/products',
+    href: '/user/product',
   },
   {
     label: 'Carts',
-    href: '/carts',
+    href: '/user/carts',
   },
   {
     label: 'Sign in',
-    href: '/login',
+    href: '/user/login',
   },
   
 ]
 
+
+  const acountMenu = {
+    items: [
+      {
+        icon: <ProfileOutlined />,
+        label: <a>Er Saurav</a>,
+        key: 'fullname'
+      },
+      {
+        icon: <LoginOutlined />,
+        label: <a>Logout</a>,
+        key: 'logout'
+      },
+      {
+        icon: <SettingOutlined />,
+        label: <a>Settings</a>,
+        key: 'settings'
+      }
+    ]
+  }
+
+
 const Layout: FC<ChildrenInterface> = ({children}) => {
   const pathName = usePathname()
+  const session = useSession()
 
+
+  
   const blackList = [
     '/admin',
     '/login',
@@ -49,6 +76,7 @@ const Layout: FC<ChildrenInterface> = ({children}) => {
 
   return (
     <AntdRegistry>
+     
       <nav className='sticky top-0 left-0 z-50 bg-white shadow-md px-10 lg:px-14 h-[72px] flex justify-between items-center'>
         
         {/* Logo */}
@@ -74,6 +102,13 @@ const Layout: FC<ChildrenInterface> = ({children}) => {
             <UserAddOutlined />
             Sign Up
           </Link>
+
+          <Dropdown menu={acountMenu}>
+            <Avatar
+                size="large" 
+                src="/images/avatar.png"  
+               />
+           </Dropdown>
         </div>
       </nav>
 
@@ -82,6 +117,7 @@ const Layout: FC<ChildrenInterface> = ({children}) => {
         {children}
       </div>
      <footer className='bg-zinc-900 h-[450px] flex items-center justify-center'></footer>
+    
     </AntdRegistry>
   )
 }

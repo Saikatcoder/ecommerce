@@ -10,20 +10,31 @@ import {
 import Image from 'next/image'
 import Logo from './shared/logo'
 import {
-    GoogleOutlined,
+  GoogleOutlined,
   UserAddOutlined,
 } from '@ant-design/icons'
 import Link from 'next/link'
+import ClientCatchError from '@/lib/client-catch-error'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
 
 const Signup = () => {
-  const signup = (value: any) => {
-    console.log(value)
+
+  const router = useRouter()
+
+  const signup = async (value: any) => {
+    try {
+      await axios.post('/api/user/signup', value)
+      router.push('/login')
+    } catch (err) {
+      ClientCatchError(err)
+    }
   }
 
   return (
     <div className='min-h-screen bg-gray-100 grid grid-cols-1 lg:grid-cols-2 animate__animated animate__fadeIn overflow-hidden'>
 
-      {/* Left Image */}
+      {/* Left Image Section */}
       <div className='relative hidden lg:block'>
         <Image
           className='object-cover'
@@ -35,8 +46,9 @@ const Signup = () => {
         />
 
         {/* Overlay */}
-        <div className='absolute inset-0 bg-black/35 flex items-center px-12'>
+        <div className='absolute inset-0 bg-black/40 flex items-center px-12'>
           <div className='text-white'>
+
             <div className='flex items-center gap-3'>
               <Logo />
               <h2 className='text-3xl font-light'>
@@ -51,6 +63,7 @@ const Signup = () => {
             <p className='mt-3 text-lg text-gray-200 max-w-md'>
               Create your account and enjoy secure shopping with our newest collection.
             </p>
+
           </div>
         </div>
       </div>
@@ -66,6 +79,7 @@ const Signup = () => {
             },
           }}
         >
+
           {/* Logo */}
           <div className='flex justify-center items-center gap-2 mb-6'>
             <Logo />
@@ -90,6 +104,7 @@ const Signup = () => {
             layout='vertical'
             onFinish={signup}
           >
+
             {/* Name */}
             <Form.Item
               label={
@@ -146,7 +161,7 @@ const Signup = () => {
               />
             </Form.Item>
 
-            {/* Button */}
+            {/* Signup Button */}
             <Form.Item className='!mb-2'>
               <Button
                 htmlType='submit'
@@ -159,21 +174,22 @@ const Signup = () => {
                 Signup
               </Button>
             </Form.Item>
+
           </Form>
 
           <Divider />
 
-          {/* Google */}
+          {/* Google Signup */}
           <Button
             block
             size='large'
-            className='rounded-xl! h-12! '
-            icon={<GoogleOutlined/>}
+            icon={<GoogleOutlined />}
+            className='!rounded-xl !h-[48px]'
           >
             Signup With Google
           </Button>
 
-          {/* Login */}
+          {/* Login Link */}
           <div className='flex justify-center gap-2 mt-5 flex-wrap'>
             <p className='text-gray-500'>
               Already have an Account?
@@ -186,6 +202,7 @@ const Signup = () => {
               Login
             </Link>
           </div>
+
         </Card>
       </div>
     </div>

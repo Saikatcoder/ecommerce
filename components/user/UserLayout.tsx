@@ -17,11 +17,15 @@ import Link from "next/link"
 import { FC } from "react"
 import { getBreadCrumbs } from "../admin/AdminLayout"
 import { usePathname } from "next/navigation"
+import { signOut } from "next-auth/react"
 
-const UserLayout: FC<ChildrenInterface> = ({
-  children
-}) => {
+const UserLayout: FC<ChildrenInterface> = ({children}) => {
 const pathname = usePathname()
+ 
+const logout =async ()=>{
+  await signOut()
+}
+
   const menus = [
     {
       icon: <ShoppingOutlined />,
@@ -90,13 +94,14 @@ const pathname = usePathname()
             block
             danger
             className="mt-4"
+            onClick={logout}
           >
             Logout
           </Button>
 
         </div>
       </Sider>
-<div className="flex flex-col gap-12  w-full">
+ <div className="flex flex-col gap-12  w-full">
     <Breadcrumb className="p-5"  items={getBreadCrumbs(pathname)}/>
       <Layout>
        <Layout.Content>
@@ -106,7 +111,7 @@ const pathname = usePathname()
        </Layout.Content>
       </Layout>
 
-</div>
+     </div>
       {/* Main Content */}
     
     </Layout>

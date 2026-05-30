@@ -14,10 +14,35 @@ import {
   GoogleOutlined,
 } from '@ant-design/icons'
 import Link from 'next/link'
+import { signIn } from 'next-auth/react'
+import ClientCatchError from '@/lib/client-catch-error'
+
 
 const Login = () => {
-  const login = (value: any) => {
-    console.log(value)
+
+  const login = async (value: any) => {
+     const payload ={
+      ...value,
+      redirect: true,
+     
+  }
+
+  const res = await signIn('credentials',payload)
+   console.log(res)
+  }
+
+  const signInwithGoogle = async()=>{
+    try {
+      const payload ={
+        redirect: true,
+        callbackUrl :'/'
+      }
+
+     const res = await signIn('google',payload)
+     console.log(res)
+    } catch (error) {
+      ClientCatchError(error)
+    }
   }
 
   return (
@@ -152,6 +177,7 @@ const Login = () => {
             size='large'
             icon={<GoogleOutlined />}
             className='rounded-xl! h-12!'
+            onClick={signInwithGoogle}
           >
             Sign in With Google
           </Button>
