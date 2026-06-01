@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "create-admin": "node cli/create-admin.js"
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
@@ -15,6 +16,9 @@
     "antd": "^6.3.7",
     "axios": "^1.16.1",
     "bcrypt": "^6.0.0",
+    "chalk": "^5.6.2",
+    "dotenv": "^17.4.2",
+    "inquirer": "^14.0.1",
     "lodash": "^4.18.1",
     "moment": "^2.30.1",
     "mongodb": "^7.2.0",

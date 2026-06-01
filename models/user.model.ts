@@ -14,9 +14,17 @@ const userSchema = new Schema({
     password:{
         type:String,
         require:true,
+    },
+    role :{
+      type : String
     }
 },{timestamps:true})
 
+// for every role is user
+userSchema.pre('save',function(){
+ this.role ='user'
+ 
+})
 
 userSchema.pre('save', async function () {
   if (!this.password) {
