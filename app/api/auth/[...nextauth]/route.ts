@@ -1,25 +1,12 @@
 import axios from "axios"
 import NextAuth, {
   NextAuthOptions,
-  Session,
-  User
 } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 
-interface CustomSessionInterface extends Session {
-  user: {
-    id: string
-    email: string
-    name: string
-    gender: string
-  }
-}
 
-interface CustomUserInterface extends User {
-  id: string
-  gender: string
-}
+
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -79,8 +66,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
 
     async signIn({ user, account }) {
-      const customUser =
-        user as CustomUserInterface
+  
 
       if (
         account?.provider === 'google'
@@ -88,7 +74,7 @@ export const authOptions: NextAuthOptions = {
         try {
 
           const payload = {
-            email: customUser.email,
+            email: user.email,
             provider: 'google'
           }
 
@@ -98,10 +84,10 @@ export const authOptions: NextAuthOptions = {
               payload
             )
 
-          customUser.id = data.id
-          customUser.email = data.email
-          customUser.name = data.name
-          customUser.gender = data.gender
+          user.id = data.id
+          user.email = data.email
+          user.name = data.name
+          user.role = data.role
 
           return true
 
@@ -117,13 +103,12 @@ export const authOptions: NextAuthOptions = {
       token,
       user
     }) {
-      const customUser =
-        user as CustomUserInterface
+    
 
       if (user) {
-        token.id = customUser.id
-        token.gender =
-          customUser.gender
+        token.id = user.id
+        token.role =
+          user.role
       }
 
       return token
@@ -133,18 +118,16 @@ export const authOptions: NextAuthOptions = {
       session,
       token
     }) {
-      const customSession =
-        session as CustomSessionInterface
-
+    
       if (token) {
-        customSession.user.id =
+        session.user.id =
           token.id as string
 
-        customSession.user.gender =
-          token.gender as string
+        session.user.role =
+          token.role as string
       }
 
-      return customSession
+      return session
     }
   },
   secret:process.env.NEXTAUTH_SECRET

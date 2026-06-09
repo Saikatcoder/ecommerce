@@ -15,6 +15,7 @@ import Link from 'next/link';
 import ChildrenInterface from '@/interface/children.interface';
 import { usePathname } from 'next/navigation';
 import Logo from '../shared/logo';
+import { signOut } from 'next-auth/react';
 
 const { Header, Content, Sider } = Layout;
 
@@ -38,12 +39,16 @@ const siderStyle: React.CSSProperties = {
     }))
     return bread
   }
-const AdminLayout: FC<ChildrenInterface> = ({children}) => {
+ const AdminLayout: FC<ChildrenInterface> = ({children}) => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   const pathname = usePathname()
+
+ const logout =async ()=>{
+   await signOut()
+ }
 
   const menus = [
     {
@@ -71,19 +76,14 @@ const AdminLayout: FC<ChildrenInterface> = ({children}) => {
   const acountMenu = {
     items: [
       {
-        icon: <ProfileOutlined />,
-        label: <a>Er Saurav</a>,
-        key: 'fullname'
-      },
-      {
         icon: <LoginOutlined />,
-        label: <a>Logout</a>,
+        label: <a onClick={logout}>Logout</a>,
         key: 'logout'
       },
       {
         icon: <SettingOutlined />,
-        label: <a>Settings</a>,
-        key: 'settings'
+        label: <a href='/admin/user'>User</a>,
+        key: 'user'
       }
     ]
   }

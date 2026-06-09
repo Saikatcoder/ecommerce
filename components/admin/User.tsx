@@ -1,33 +1,58 @@
 'use client'
 
-import { Card, Skeleton } from 'antd'
+import fetcher from '@/lib/fetcher'
+import { Card, Skeleton, Empty } from 'antd'
 import Image from 'next/image'
+import useSWR from 'swr'
 
 const User = () => {
+  const {data,error,isLoading } = useSWR('/api/user', fetcher)
+
+  if (isLoading) {
+    return (
+      <Skeleton
+        active
+        className='w-full'
+      />
+    )
+  }
+
+  if (error) {
+    return (
+      <Empty description='Failed to load users' />
+    )
+  }
+
   return (
-    <div className='grid lg:grid-cols-4 gap-8'>
-      <Skeleton active className='col-span-4'/>
-      {
-        Array(16).fill(0).map((item,index)=>(
-          <Card key={index} hoverable>
-            <div className='flex flex-col items-center gap-6'>
-              <Image 
-              alt={`avt-${index}`} 
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'>
+      {data?.map((user: any) => (
+        <Card
+          key={user._id}
+          hoverable
+        >
+          <div className='flex flex-col items-center gap-4'>
+            <Image
+              alt={user.fullname}
               width={100}
               height={100}
               src='/images/avatar.png'
               priority
-              className='rounded-full '
-              objectFit='cover'
-              />
-              <Card.Meta
-              title="saikat Dutta" 
-              description='saikat@gmail.com'/>
-            <label className='text-gray-300 font-medium '>jsn 3 2026</label>
-            </div>
-          </Card>
-        ))
-      }
+              className='rounded-full object-cover'
+            />
+
+            <Card.Meta
+              title={user.fullname}
+              description={user.email}
+            />
+
+            <label className='text-gray-400 text-sm'>
+              {new Date(
+                user.createdAt
+              ).toLocaleDateString()}
+            </label>
+          </div>
+        </Card>
+      ))}
     </div>
   )
 }

@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   Empty,
+  message,
   Tag,
 } from 'antd'
 import {
@@ -14,9 +15,29 @@ import Image from 'next/image'
 import { FC, useEffect, useState } from 'react'
 import Link from 'next/link'
 import priceClaculate from '@/lib/priceCalculate'
+import axios from 'axios'
+import ClientCatchError from '@/lib/client-catch-error'
+import { getSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { mutate } from 'swr'
+
 
 const Products: FC<DataInterface> = ({ data }) => {
   const [isBrowser, setIsBrowser] = useState(false)
+  const router = useRouter()
+  const addToCart = async (id :string)=>{
+    try {
+      const session = await getSession()
+      if(!session)
+        return router.push('/login')
+
+     await axios.post('/api/cart',{product:id})
+     message.success('product addto cart')
+      mutate('/api/cart?count=true')
+    } catch (error) {
+      return ClientCatchError(error)
+    }
+  }
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -164,8 +185,9 @@ const Products: FC<DataInterface> = ({ data }) => {
                   <Button
                     type='primary'
                     icon={<ShoppingCartOutlined />}
-                    className='!bg-green-500 text-xs sm:text-sm'
+                    className='bg-green-500! text-xs sm:text-sm'
                     block
+                    onClick={()=>addToCart(item._id)}
                   >
                     Cart
                   </Button>

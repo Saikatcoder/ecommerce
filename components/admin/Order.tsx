@@ -1,75 +1,49 @@
 'use client'
 
-import { Avatar, Select, Skeleton, Table } from "antd"
+import ClientCatchError from "@/lib/client-catch-error"
+import fetcher from "@/lib/fetcher"
+import { Avatar, message, Select, Skeleton, Table } from "antd"
+import axios from "axios"
 import moment from "moment"
+import useSWR, { mutate } from "swr"
 
-const data = [
-  {
-    "orderId": "ORD1001",
-    "userId": "USR001",
-    "product": {
-      "productId": "P001",
-      "productName": "Wireless Mouse",
-      "quantity": 2,
-      "price": 29.99
-    },
-    "totalAmount": 59.98,
-    "status": "pending",
-    "createdAt": "2025-06-05T10:00:00Z"
-  },
-  {
-    "orderId": "ORD1002",
-    "userId": "USR002",
-    "product": {
-      "productId": "P003",
-      "productName": "Bluetooth Headphones",
-      "quantity": 1,
-      "price": 59.99
-    },
-    "totalAmount": 59.99,
-    "status": "success",
-    "createdAt": "2025-06-04T12:45:00Z"
-  },
-  {
-    "orderId": "ORD1003",
-    "userId": "USR003",
-    "product": {
-      "productId": "P002",
-      "productName": "USB-C Charger",
-      "quantity": 3,
-      "price": 29.99
-    },
-    "totalAmount": 89.97,
-    "status": "error",
-    "createdAt": "2025-06-03T14:30:00Z"
-  },
-  {
-    "orderId": "ORD1004",
-    "userId": "USR004",
-    "product": {
-      "productId": "P004",
-      "productName": "Laptop Stand",
-      "quantity": 1,
-      "price": 49.99
-    },
-    "totalAmount": 49.99,
-    "status": "warning",
-    "createdAt": "2025-06-02T16:00:00Z"
-  }
-]
 
 
 const Order = () => {
+ const {data, error, isLoading} = useSWR('/api/order', fetcher)
+
+ if(isLoading)
+  return <Skeleton active/>
+
+ if(error)
+ return <h1 className="text-red-500 font-medium">{error.message}</h1>
+
+
+const changeStatus = async(status:string, id:any)=>{
+  try {
+    await axios.put(`api/order/${id}`,{status})
+    message.success(`product status updated to${status}`)
+    mutate('/api/order')
+  } catch (error) {
+    ClientCatchError(error)
+  }
+}
+
+
   const columns = [
    {
       title: "Customer",
       key:"customer",
-      render :()=>(
+      render :(item:any)=>(
          <div className="flex lg:gap-3">
-          <Avatar src='/images/avatar.png'></Avatar>
+          <Avatar src='/images/avatar.png' className="!bg-orange-500 !capitalize">
+          {
+              item.user.fullname[0]
+          }
+          </Avatar>
          <div className="flex flex-col">
-           <h1 className="font-medium">Saikat</h1>
-           <label className="text-gray-400">saikat@saikat.com</label>
+           <h1 className="font-medium">{item.user.fullname}</h1>
+           <label className="text-gray-400">{item.user.email}</label>
          </div>
          </div>
       )
@@ -83,23 +57,32 @@ const Order = () => {
     },
     {
       title:"price",
-      key:'pricet',
+      key:'price',
       render:(item: any)=>(
         <label>{item.product.price}</label>
+      )
+    },
+     {
+      title:"Discount",
+      key:'discount',
+      render:(item: any)=>(
+        <label>{item.product.discount}%</label>
       )
     },
     {
       title: 'Address',
       key:'address',
-      render:()=>(
-        <label className="text-gray-400">Bishnupur, krishnaganj , kailashatala</label>
+      render:(item:any)=>(
+        <label className="text-gray-400">{
+          item.user.address || "address not found"
+        }</label>
       )
     },
     {
       title:'Status',
       key:'status',
-      render:()=>(
-        <Select style={{width:120}}>
+      render:(item:any)=>(
+        <Select style={{width:120}} defaultValue={item.status} onChange={(value)=>changeStatus(value, item._id)}>
           <Select.Option value='processing'>Processing</Select.Option>
           <Select.Option value='dispatched'>Dispatched</Select.Option>
           <Select.Option value='returend'>Returend</Select.Option>
@@ -116,11 +99,10 @@ const Order = () => {
   ]
   return (
     <div className=" space-y-8">
-     <Skeleton active/>
      <Table
        columns ={columns}
        dataSource={data}
-       rowKey='orderId'
+       rowKey='_id'
      />
     </div>
   )

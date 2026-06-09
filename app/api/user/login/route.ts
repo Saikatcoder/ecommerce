@@ -21,7 +21,7 @@ export const POST= async(req:NextRequest)=>{
             id : user._id,
             name: user.fullname,
             email : user.email,
-            gender:'male'
+            role:user.role
         }
           
         if(!user)

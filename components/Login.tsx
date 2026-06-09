@@ -14,22 +14,40 @@ import {
   GoogleOutlined,
 } from '@ant-design/icons'
 import Link from 'next/link'
-import { signIn } from 'next-auth/react'
+import { getSession, signIn } from 'next-auth/react'
 import ClientCatchError from '@/lib/client-catch-error'
+import { useRouter } from 'next/navigation'
 
 
 const Login = () => {
+const router = useRouter()
 
   const login = async (value: any) => {
-     const payload ={
+   try {
+      const payload ={
       ...value,
-      redirect: true,
-     
+      redirect: false,
+    }
+   await signIn('credentials',payload)
+  const session = await getSession()
+
+  if(!session)
+    throw new Error("failed to login user")
+
+  if(session.user.role === 'user')
+   return router.replace('/')
+
+  
+  if(session.user.role === 'admin')
+   return router.replace('/admin/orders')
+
+  
+
+   } catch (error) {
+    ClientCatchError(error)
+   }
   }
 
-  const res = await signIn('credentials',payload)
-   console.log(res)
-  }
 
   const signInwithGoogle = async()=>{
     try {
