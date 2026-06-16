@@ -1,6 +1,7 @@
 'use client'
 import ChildrenInterface from "@/interface/children.interface"
 import {
+  ProductFilled,
   ReconciliationOutlined,
   SettingOutlined,
   ShoppingOutlined
@@ -17,11 +18,12 @@ import Link from "next/link"
 import { FC } from "react"
 import { getBreadCrumbs } from "../admin/AdminLayout"
 import { usePathname } from "next/navigation"
-import { signOut } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 
 const UserLayout: FC<ChildrenInterface> = ({children}) => {
 const pathname = usePathname()
- 
+const session = useSession() 
+
 const logout =async ()=>{
   await signOut()
 }
@@ -44,6 +46,15 @@ const logout =async ()=>{
         </Link>
       ),
       key: "orders",
+    },
+    {
+      icon: <ProductFilled />,
+      label: (
+        <Link href="/">
+          Product
+        </Link>
+      ),
+      key: "product",
     },
     {
       icon: <SettingOutlined />,
@@ -76,15 +87,15 @@ const logout =async ()=>{
 
           <div className="flex items-center gap-3">
 
-            <Avatar className="w-16 h-16" />
+            <Avatar className="w-16 h-16"  src={session.data?.user?.image || 'avatar.png'}/>
 
             <div className="text-white">
               <h1 className="text-lg font-medium">
-                Saikat
+                {session.data?.user?.name}
               </h1>
 
               <p className="text-sm text-slate-300">
-                example@email.com
+                {session.data?.user?.email}
               </p>
             </div>
 

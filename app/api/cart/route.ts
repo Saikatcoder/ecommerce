@@ -4,7 +4,7 @@ mongoose.connect(db)
 
 import ServerCatchError from "@/lib/server-catch-error";
 import { getServerSession } from "next-auth";
-import { NextRequest, NextResponse, NextResponse as res } from "next/server";
+import { NextRequest, NextResponse as res } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/route";
 import CartModel from "@/models/cart.model";
 

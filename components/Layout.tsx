@@ -17,6 +17,7 @@ import {
   Avatar,
   Badge,
   Dropdown,
+  Tooltip,
 } from 'antd'
 import {
   signOut,
@@ -190,12 +191,17 @@ const Layout: FC<ChildrenInterface> = ({children}) => {
           ) : (
             <div className='flex items-center gap-5'>
               
-              {/* Cart */}
-              <Link href='/user/carts'>
+              {
+                session.data.user.role === 'user' && 
+                <Tooltip title='cart' >
+                   <Link href='/user/carts'>
                 <Badge count={data && data.count}>
                   <ShoppingCartOutlined className='text-2xl cursor-pointer hover:text-green-500 transition' />
                 </Badge>
               </Link>
+                </Tooltip>
+              }
+
 
               {/* User */}
               <div className='flex items-center gap-3'>

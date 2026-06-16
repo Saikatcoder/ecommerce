@@ -14,7 +14,7 @@ const cartSchema = new Schema({
     ref:ProductModel,
     required:true
  },
-qunt:{
+qnt:{
     type:Number,
     default:1
     },
