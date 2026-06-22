@@ -18,19 +18,14 @@ import axios from 'axios'
 import Image from 'next/image'
 import { useState } from 'react'
 import useSWR, { mutate } from 'swr'
-import { useRazorpay, RazorpayOrderOptions } from 'react-razorpay'
-import { useSession } from 'next-auth/react'
+import Paynow from '../shared/pay'
+import { useRouter } from 'next/navigation'
 
-
-interface ModifiedRazorpayInterface extends RazorpayOrderOptions {
-  notes:any
-}
 
 const Carts = () => {
-  const session = useSession()
   const { data, error, isLoading } = useSWR('/api/cart',fetcher)
   const [loading, setLoading] = useState({state: false,index: -1,buttonIndex: -1})
-  const {Razorpay}= useRazorpay()
+  const router = useRouter()
 
 
   if (isLoading) {
@@ -50,7 +45,7 @@ const Carts = () => {
       <Empty description='Cart is Empty' />
     )
   }
-
+console.log(data)
   const updateQnt = async (
     num: number,
     id: string,
@@ -117,10 +112,11 @@ const removeCart = async ( id: string,index: number,buttonIndex: number) => {
 
 const getTotalAmmount = ()=>{
   let sum = 0
+  // eslint-disable-next-line prefer-const
   for(let item of data){
     const amount =
       priceClaculate(
-        item.product.price,
+        item.product.prices,
         item.product.discount
       ) * item.qnt
 
@@ -131,70 +127,10 @@ const getTotalAmmount = ()=>{
 }
 
 
-const getOrderPayload = ()=>{
-  const products = []
-  const price = []
-  const discounts = []
-
-  for(let item of data){
-    products.push(item.product._id)
-    price.push(item.product.price)
-    discounts.push(item.product.discount)
-  }
-
-  return{
-    products,price,discounts
-  }
-}
-
-const payNow = async ()=>{
-  try{
-    if(!session.data)
-      throw new Error('session not initalized yet')
-
-   
-    const payload = {
-      amount : getTotalAmmount()
-    }
-     const {data} = await axios.post('/api/razorpay/order',payload)
-    
-     const options:ModifiedRazorpayInterface ={
-      name:'ecom Shop',
-      description:data.product.title,
-      amount:data.amount,
-      order_id:data.id,
-      key:process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-      currency:'INR',
-      prefill:{
-        name:session.data?.user.name as string,
-        email:session.data.user.email as string
-      },
-      notes:{
-         name:session.data?.user.name as string,
-         user:session.data.user.id,
-        orders:JSON.stringify(getOrderPayload())
-      },
-      handler:()=>{
-        console.log('success')
-      }
-     }
-     const rzp = new Razorpay(options)
-     rzp.open()
-
-     rzp.on('payment.failed',()=>{
-      console.log("failed")
-     })
-
-  }catch(error){
-    return ClientCatchError(error)
-  }
-}
-
-
-
   return (
     <div className='space-y-6 max-h-[80vh] overflow-y-auto pr-2'>
       {data.map(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (item: any, index: number) => (
           <Card
             key={item._id}
@@ -226,13 +162,13 @@ const payNow = async ()=>{
                     <span className='font-bold text-lg text-green-600'>
                       ₹
                       {priceClaculate(
-                        item.product?.price,
+                        item.product?.prices,
                         item.product?.discount
                       )}
                     </span>
 
                     <del className='text-gray-400'>
-                      ₹{item.product?.price}
+                      ₹{item.product?.prices}
                     </del>
 
                     <span className='text-red-500'>
@@ -306,7 +242,7 @@ const payNow = async ()=>{
 
       <div className='flex justify-end items-center gap-6'>
         <h1 className='text-xl font-semibold'>Total amount = ₹{getTotalAmmount().toString()}</h1>
-        <Button size='large' type='primary' onClick={()=>payNow()}>Pay now</Button>
+       <Paynow product={data} title='Buy now' onSuccess={()=>router.push('/user/orders')}/>
       </div>
     </div>
   )

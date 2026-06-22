@@ -1,35 +1,41 @@
-import ServerCatchError from "@/lib/server-catch-error";
+const db = `${process.env.DB_URL}/${process.env.DB_NAME}`
+import serverCatchError from "@/lib/server-catch-error";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
-import { NextRequest , NextResponse as res} from "next/server";
-import Razorpay from "razorpay";
+import { NextRequest, NextResponse as res} from "next/server";
+import Razorpay from 'razorpay'
 import { authOptions } from "../../auth/[...nextauth]/route";
-const db = `${process.env.DB_URL}/${process.env.DB_NAME}`
 mongoose.connect(db)
 
 
-const rzp = new Razorpay({
+export const rzp = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret:process.env.RAZORPAY_KEY_SECRET
+    key_secret: process.env.RAZORPAY_KEY_SECRET
 })
-export const POST = async(req:NextRequest)=>{
+
+export const POST = async (req: NextRequest)=>{
     try {
         const session = await getServerSession(authOptions)
-        
-        if(!session)
-            return res.json({message:'unauthorized'},{status:401})
 
-        if(session.user.role !== 'user')
-            return res.json({message:'unauthorized'},{status:401})
+        if(!session)
+            return res.json({message: 'Unauthorized'}, {status: 401})
+
+        if(session.user.role !== "user")
+            return res.json({message: 'Unauthorized'}, {status: 401})
 
         const body = await req.json()
+
         const payload = {
-            amount:Number(body.amount)*100,
-            currency:'INR'
+            amount: Number(body.amount)*100,
+            currency: 'INR'
         }
-       const order = await rzp.orders.create(payload)
-       return res.json(order)
-    } catch (error) {
-        return ServerCatchError(error)
+
+        const order = await rzp.orders.create(payload)
+        return res.json(order)
+    }
+    catch(err)
+    {
+         console.log("RAZORPAY ORDER ERROR:", err)
+        return serverCatchError(err)
     }
 }

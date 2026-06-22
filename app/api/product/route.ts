@@ -77,7 +77,7 @@ export const POST = async (req: NextRequest) => {
       title: body.get('title'),
       description:
         body.get('description'),
-      price: Number(
+      prices: Number(
         body.get('price')
       ),
       discount: Number(

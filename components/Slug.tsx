@@ -1,15 +1,20 @@
+'use client'
 import DataInterface from "@/interface/data.interface"
 import { Card, Empty, Tag, Button } from "antd"
 import Image from "next/image"
 import { FC } from "react"
 import { ShoppingCartOutlined } from "@ant-design/icons"
 import priceClaculate from "@/lib/priceCalculate"
+import Paynow from "./shared/pay"
+import { useRouter } from "next/navigation"
 
 interface TitleInterface extends DataInterface {
   title: string
+  data:any
 }
 
-const Slug: FC<TitleInterface> = ({ data, title }) => {
+const Slug: FC<TitleInterface> = ({ data }) => {
+  const router = useRouter()
   if (!data)
     return (
       <div className="min-h-[50vh] flex justify-center items-center">
@@ -72,7 +77,7 @@ const Slug: FC<TitleInterface> = ({ data, title }) => {
   {/* Final discounted price */}
         <h1 className="text-3xl font-bold text-green-500">
     ₹{priceClaculate(
-      data.price,
+      data.prices,
       data.discount
     )}
   </h1>
@@ -80,7 +85,7 @@ const Slug: FC<TitleInterface> = ({ data, title }) => {
   {/* Old price */}
   {data.discount > 0 && (
     <del className="text-slate-400 text-lg">
-     MRP :- ₹{data.price}
+     MRP :- ₹{data.prices}
     </del>
   )}
 
@@ -112,14 +117,7 @@ const Slug: FC<TitleInterface> = ({ data, title }) => {
               >
                 Add To Cart
               </Button>
-
-              <Button
-                size="large"
-                className="sm:w-[200px]"
-              >
-                Buy Now
-              </Button>
-
+              <Paynow product={data} onSuccess={()=>router.push('/user/orders')}/>
             </div>
           </div>
         </div>

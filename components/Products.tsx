@@ -25,6 +25,8 @@ import { mutate } from 'swr'
 const Products: FC<DataInterface> = ({ data }) => {
   const [isBrowser, setIsBrowser] = useState(false)
   const router = useRouter()
+
+  
   const addToCart = async (id :string)=>{
     try {
       const session = await getSession()
@@ -147,14 +149,14 @@ const Products: FC<DataInterface> = ({ data }) => {
                 <div className='flex flex-wrap items-center gap-2'>
                   <h2 className='text-xl sm:text-2xl font-bold text-black'>
                     ₹{priceClaculate(
-                      item.price,
+                      item.prices,
                       item.discount
                     )}
                   </h2>
 
                   {item.discount > 0 && (
                     <del className='text-gray-400 text-sm'>
-                      ₹{item.price}
+                      ₹{item.prices}
                     </del>
                   )}
                 </div>
