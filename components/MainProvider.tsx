@@ -1,14 +1,14 @@
 'use client'
 import ChildrenInterface from '@/interface/children.interface'
 import { SessionProvider } from 'next-auth/react'
-import  { FC } from 'react'
+import React, { FC } from 'react'
 import Layout from './Layout'
 
-const MainProvider : FC <ChildrenInterface> = ({children}) => {
+const MainProvider: FC<ChildrenInterface> = ({children}) => {
   return (
     <SessionProvider>
         <Layout>
-        {children}
+            {children}
         </Layout>
     </SessionProvider>
   )

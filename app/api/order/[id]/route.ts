@@ -17,7 +17,7 @@ export const PUT = async (req: NextRequest, context: IdInterface)=>{
         if(session.user.role !== "admin")
             return res.json({message: 'Unauthorized'}, {status: 401})
 
-        const {id} = context.params
+        const {id} = await context.params
         const body = await req.json()
         const order = await OrderModel.findByIdAndUpdate(id, {status: body.status}, {new: true})
 

@@ -17,6 +17,30 @@ const paymentSchema = new Schema({
         type: String,
         required: true
     },
+    amount:{
+        type:Number,
+        required:true
+    },
+    currency:{
+        type:String,
+        required:true
+    },
+    status:{
+        type:String,
+        required:true
+    },
+    method:{
+        type:String,
+        required:true
+    },
+    tax:{
+        type:Number,
+        default: 0
+    },
+    fee:{
+        type:Number,
+        default: 0
+    },
     vendor: {
         type: String,
         default: 'razorpay',

@@ -17,13 +17,17 @@ import Link from 'next/link'
 import { getSession, signIn } from 'next-auth/react'
 import ClientCatchError from '@/lib/client-catch-error'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 
 const Login = () => {
+const [loading, setLoading] = useState(false)
+
 const router = useRouter()
 
   const login = async (value: any) => {
    try {
+    setLoading(true)
       const payload ={
       ...value,
       redirect: false,
@@ -45,7 +49,10 @@ const router = useRouter()
 
    } catch (error) {
     ClientCatchError(error)
-   }
+  }
+  finally{
+    setLoading(false)
+  }
   }
 
 
@@ -172,6 +179,7 @@ const router = useRouter()
 
             <Form.Item className='!mb-3'>
               <Button
+              loading={loading}
                 htmlType='submit'
                 size='large'
                 type='primary'

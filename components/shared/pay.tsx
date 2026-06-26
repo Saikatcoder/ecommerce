@@ -11,6 +11,7 @@ import { useRazorpay, RazorpayOrderOptions } from 'react-razorpay'
 import { useSession } from 'next-auth/react'
 import { FC, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 
 interface ModifiedRazorpayInterface extends RazorpayOrderOptions {
@@ -58,7 +59,7 @@ const Paynow:FC<PayInterface>= ({product, onSuccess, onFailed, onClick, title='P
   const isArray = Array.isArray(product)
   const session = useSession()
   const {Razorpay}= useRazorpay()
-
+  const router = useRouter()
 
 const getTotalAmmount = ()=>{
   let sum = 0
@@ -113,9 +114,13 @@ const payNow = async ()=>{
     if(!session.data)
       throw new Error('session not initalized yet')
 
+    if(!session.data.user.address.pincode){
+      sessionStorage.setItem('message',"please update your address first")
+      return router.push('/user/settings')
+    }
    
     const payload = {
-      amount : isArray ? getTotalAmmount() : product.prices
+      amount : isArray ? getTotalAmmount() : priceClaculate(product.prices, product.discount)
     }
 
      const {data} = await axios.post('/api/razorpay/order',payload)

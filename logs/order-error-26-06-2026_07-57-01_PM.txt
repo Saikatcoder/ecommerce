@@ -1,0 +1,1 @@
+Payment validation failed: method: Path `method` is required., currency: Path `currency` is required., status: Path `status` is required.

@@ -29,10 +29,14 @@ const orderSchema = new Schema({
         type:Number,
         required:true
     }],
+    grossTotal:{
+        type:Number,
+        required:true
+    },
     status:{
         type: String,
         default: 'processing',
-        enum:["processing","dispatched","delivered"]
+        enum:["processing","dispatched","returned"]
     }
 },{timestamps:true})
 

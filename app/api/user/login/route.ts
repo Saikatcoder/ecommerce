@@ -1,5 +1,5 @@
-const db = `${process.env.DB_URL}/${process.env.DB_NAME}`
 import mongoose from "mongoose";
+const db = `${process.env.DB_URL}/${process.env.DB_NAME}`
 mongoose.connect(db)
 
 import UserModel from "@/models/user.model";
@@ -17,15 +17,17 @@ export const POST= async(req:NextRequest)=>{
         const provider = body.provider
        const user = await UserModel.findOne({email})
         
-           const payload = {
-            id : user._id,
-            name: user.fullname,
-            email : user.email,
-            role:user.role
+       if(!user)
+        return res.json({message:"User not found"},{status:404})
+       
+       const payload = {
+           id : user._id,
+           name: user.fullname,
+           email : user.email,
+           role:user.role,
+           address:user.address
         }
           
-        if(!user)
-          return res.json({message:"User not found"},{status:404})
         
 
         if(provider === 'google')
@@ -40,7 +42,7 @@ export const POST= async(req:NextRequest)=>{
        return res.json(payload,{status:200})
 
     } catch (error) {
-        ServerCatchError(error)
+       return ServerCatchError(error)
     }
 }
 

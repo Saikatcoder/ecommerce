@@ -36,7 +36,7 @@ const logout =async ()=>{
           Carts
         </Link>
       ),
-      key: "cart",
+      key: "/user/carts",
     },
     {
       icon: <ReconciliationOutlined />,
@@ -45,7 +45,7 @@ const logout =async ()=>{
           Orders
         </Link>
       ),
-      key: "orders",
+      key: "/user/orders",
     },
     {
       icon: <ProductFilled />,
@@ -54,7 +54,7 @@ const logout =async ()=>{
           Product
         </Link>
       ),
-      key: "product",
+      key: "/user/product",
     },
     {
       icon: <SettingOutlined />,
@@ -63,7 +63,7 @@ const logout =async ()=>{
           Setting
         </Link>
       ),
-      key: "setting",
+      key: "/user/settings",
     },
   ]
 
@@ -80,14 +80,17 @@ const logout =async ()=>{
           mode="inline"
           items={menus}
           className="h-full"
+          selectedKeys={[pathname]}
         />
 
         {/* Bottom User Area */}
         <div className="bg-zinc-900 p-5 absolute bottom-0 left-0 w-full">
 
-          <div className="flex items-center gap-3">
+       {
+        session.data && 
+           <div className="flex items-center gap-3">
 
-            <Avatar className="w-16 h-16"  src={session.data?.user?.image || 'avatar.png'}/>
+            <Avatar className="w-16 h-16"  src={session.data?.user?.image }/>
 
             <div className="text-white">
               <h1 className="text-lg font-medium">
@@ -100,6 +103,7 @@ const logout =async ()=>{
             </div>
 
           </div>
+       }
 
           <Button
             block
