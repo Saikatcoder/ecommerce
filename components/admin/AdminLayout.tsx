@@ -54,22 +54,22 @@ const siderStyle: React.CSSProperties = {
     {
       icon: <ShoppingOutlined />,
       label: <Link href="/admin/products">Products</Link>,
-      key: 'products'
+      key: '/adimn/products'
     },
     {
       icon: <ReconciliationOutlined />,
       label: <Link href="/admin/orders">Orders</Link>,
-      key: 'orders'
+      key: '/admin/orders'
     },
     {
       icon: <CreditCardOutlined />,
       label: <Link href="/admin/payments">Payments</Link>,
-      key: 'payments'
+      key: '/admin/payments'
     },
     {
       icon: <UserOutlined />,
       label: <Link href="/admin/users">Users</Link>,
-      key: 'users'
+      key: '/admin/users'
     }
   ]
 
@@ -93,7 +93,7 @@ const siderStyle: React.CSSProperties = {
     <Layout hasSider>
       <Sider style={siderStyle} width={250}>
         <div className="demo-logo-vertical" />
-        <Menu theme="dark" mode="inline" items={menus} />
+        <Menu theme="dark" mode="inline" items={menus} selectedKeys={[pathname]} />
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} className='flex items-center'>
