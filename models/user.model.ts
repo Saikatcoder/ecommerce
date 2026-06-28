@@ -15,9 +15,14 @@ const userSchema = new Schema({
         type:String,
         require:true,
     },
-    role :{
-      type : String
-    },
+   role :{
+  type : String,
+  enum:['user','admin','superadmin']
+},
+  isBlocked:{
+    type:Boolean,
+    default:false
+  },
     address:{
       street:{type:String, default:null},
       city:{type:String, default:null},

@@ -34,7 +34,7 @@ const router = useRouter()
     }
    await signIn('credentials',payload)
   const session = await getSession()
-
+console.log(session)
   if(!session)
     throw new Error("failed to login user")
 
@@ -42,8 +42,11 @@ const router = useRouter()
    return router.replace('/')
 
   
-  if(session.user.role === 'admin')
-   return router.replace('/admin/orders')
+  if(session.user.role === 'admin' ||  session.user.role === 'superadmin')
+   {
+    console.log("redirect admin")
+    return router.replace('/admin/orders')
+  }
 
   
 

@@ -9,6 +9,7 @@ import ProductModel from "@/models/product.model";
 import SlugInterface from "@/interface/slug.interface";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
+
 export const GET = async (req: NextRequest,context: SlugInterface) => {
   try {
     const { slug } = await context.params
@@ -38,8 +39,11 @@ export const PUT = async (req: NextRequest, context: SlugInterface)=>{
       if(!session)
         return res.json({message:"Unauthorized"}, {status:401})
 
-      if(session.user.role !== 'admin')
-        return res.json({message:"unauthorized"},{status:401})
+     if(
+   session.user.role !== 'admin' &&
+   session.user.role !== 'superadmin'
+)
+   return res.json({message:"unauthorized"},{status:401})
 
         const {slug: id} = context.params
         const body = await req.json()
@@ -65,8 +69,11 @@ export const DELETE = async (req: NextRequest, context: SlugInterface)=>{
       if(!session)
         return res.json({message:"Unauthorized"}, {status:401})
 
-      if(session.user.role !== 'admin')
-        return res.json({message:"unauthorized"},{status:401})
+     if(
+   session.user.role !== 'admin' &&
+   session.user.role !== 'superadmin'
+)
+   return res.json({message:"unauthorized"},{status:401})
 
         const {slug: id} = context.params
         const product = await ProductModel.findByIdAndDelete(id)

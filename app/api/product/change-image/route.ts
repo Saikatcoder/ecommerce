@@ -19,8 +19,9 @@ export const PUT = async (req: NextRequest)=>{
       if(!session)
         return res.json({message:"Unauthorized"}, {status:401})
 
-      if(session.user.role !== 'admin')
-        return res.json({message:"unauthorized"},{status:401})
+   if(session.user.role !== 'admin' && session.user.role !== 'superadmin')
+   return res.json({message:"unauthorized"},{status:401})
+
 
         const body = await req.formData()
         const id = body.get("id")

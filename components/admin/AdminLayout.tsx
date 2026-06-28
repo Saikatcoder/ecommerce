@@ -4,10 +4,10 @@ import { FC } from 'react';
 import {
   CreditCardOutlined,
   LoginOutlined,
-  ProfileOutlined,
   ReconciliationOutlined,
   SettingOutlined,
   ShoppingOutlined,
+  UserAddOutlined,
   UserOutlined
 } from '@ant-design/icons';
 import { Avatar, Breadcrumb, Dropdown, Layout, Menu, theme } from 'antd';
@@ -15,7 +15,7 @@ import Link from 'next/link';
 import ChildrenInterface from '@/interface/children.interface';
 import { usePathname } from 'next/navigation';
 import Logo from '../shared/logo';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 const { Header, Content, Sider } = Layout;
 
@@ -45,7 +45,8 @@ const siderStyle: React.CSSProperties = {
   } = theme.useToken();
 
   const pathname = usePathname()
-
+  const session = useSession()
+  console.log(session)
  const logout =async ()=>{
    await signOut()
  }
@@ -76,13 +77,16 @@ const siderStyle: React.CSSProperties = {
   const acountMenu = {
     items: [
       {
-        icon: <LoginOutlined />,
-        label: <a onClick={logout}>Logout</a>,
+        label: <p className='text-green-500 capitalize'>{session.data?.user.name}</p>
+      },
+      {
+        icon: <LoginOutlined  className='text-red-500'/>,
+        label: <a onClick={logout} className='text-red-500'>Logout</a>,
         key: 'logout'
       },
       {
-        icon: <SettingOutlined />,
-        label: <a href='/admin/user'>User</a>,
+        icon: <UserAddOutlined/>,
+        label: <a href='/admin/users'>{session.data?.user.role}</a>,
         key: 'user'
       }
     ]

@@ -24,9 +24,11 @@ export const GET = async (req: NextRequest)=>{
         const session = await getServerSession(authOptions)
         if(!session)
             return res.json({message: 'Unauthorized'}, {status: 401})
-
-        if(session.user.role !== "admin")
-            return res.json({message: 'Unauthorized'}, {status: 401})
+if(
+   session.user.role !== 'admin' &&
+   session.user.role !== 'superadmin'
+)
+   return res.json({message:"unauthorized"},{status:401})
 
         const payments = await PaymentModel.find().sort({createdAt: -1})
         .populate("user", "fullname email")

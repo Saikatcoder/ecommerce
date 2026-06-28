@@ -43,7 +43,7 @@ export const GET = async (req: NextRequest)=>{
         if(role === "user")
             orders = await OrderModel.find({user: id}).sort({createdAt: -1}).populate("products")
 
-        if(role === "admin")
+        if(role === "admin" || "superadmin")
             orders = await OrderModel.find().sort({createdAt: -1})
             .populate("user", "fullname email mobile address")
             .populate("products")
