@@ -170,9 +170,9 @@ const Products = () => {
                 title={item.title}
                 description={
                   <div className='flex gap-2'>
-                    <label>₹{item.price}</label>
-                    <del>₹{item.price}</del>
-                    <label>(${item.discount}% Off)</label>
+                    <label>₹{item.prices}</label>
+                    <del>₹{item.prices}</del>
+                    <label>(₹{item.discount}% Off)</label>
                   </div>
                 }
               />

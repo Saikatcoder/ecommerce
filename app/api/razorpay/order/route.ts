@@ -6,7 +6,8 @@ import { NextRequest, NextResponse as res} from "next/server";
 import Razorpay from 'razorpay'
 import { authOptions } from "../../auth/[...nextauth]/route";
 mongoose.connect(db)
-
+import dns from 'dns'
+dns.setServers(['1.1.1.1','8.8.8.8'])
 
 export const rzp = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,

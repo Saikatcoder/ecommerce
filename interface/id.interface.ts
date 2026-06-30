@@ -1,8 +1,5 @@
-interface IdInterface {
-    params:{
-        id:string
-    }
+export default interface IdInterface {
+  params: Promise<{
+    id: string
+  }>
 }
-
-
-export default IdInterface

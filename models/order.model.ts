@@ -36,7 +36,7 @@ const orderSchema = new Schema({
     status:{
         type: String,
         default: 'processing',
-        enum:["processing","dispatched","returned"]
+        enum:["processing","dispatched","delivered","returned"]
     }
 },{timestamps:true})
 

@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 const db = `${process.env.DB_URL}/${process.env.DB_NAME}`
 mongoose.connect(db)
+import dns from 'dns'
+dns.setServers(['1.1.1.1','8.8.8.8'])
 
 import UserModel from "@/models/user.model";
 import bcrypt from 'bcrypt'
@@ -25,13 +27,17 @@ export const POST= async(req:NextRequest)=>{
            name: user.fullname,
            email : user.email,
            role:user.role,
-           address:user.address
+           address:user.address,
         }
           
         
 
         if(provider === 'google')
            return res.json(payload)
+        
+        if (user.isBlocked) {
+            throw new Error("Your account has been blocked. Contact superadmin@gmail.com")
+        }
 
        const isLogin = await bcrypt.compare(password ,user.password)
 

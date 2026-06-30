@@ -130,7 +130,7 @@ const payNow = async ()=>{
       description:"bulk product",
       amount:data.amount,
       order_id:data.id,
-      key:process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      key:process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID as string,
       currency:'INR',
       prefill:{
         name:session.data?.user.name as string,

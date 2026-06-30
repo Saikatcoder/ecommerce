@@ -5,7 +5,6 @@ import {
   CreditCardOutlined,
   LoginOutlined,
   ReconciliationOutlined,
-  SettingOutlined,
   ShoppingOutlined,
   UserAddOutlined,
   UserOutlined
@@ -46,7 +45,6 @@ const siderStyle: React.CSSProperties = {
 
   const pathname = usePathname()
   const session = useSession()
-  console.log(session)
  const logout =async ()=>{
    await signOut()
  }
@@ -77,6 +75,7 @@ const siderStyle: React.CSSProperties = {
   const acountMenu = {
     items: [
       {
+         key: "header",
         label: <p className='text-green-500 capitalize'>{session.data?.user.name}</p>
       },
       {

@@ -70,7 +70,7 @@ const Layout: FC<ChildrenInterface> = ({children}) => {
     items: [
       {
         key: 'profile',
-        icon: <ProfileOutlined />,
+        icon: <UserAddOutlined />,
         label: (
           <Link href='/user/orders'>
             {session.data?.user?.name}

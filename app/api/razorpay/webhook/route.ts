@@ -35,7 +35,7 @@ interface DeleteCartsInterface {
     products: string[]
 }
 
-const createLog = (err: unknown, service: string)=>{
+const createLog = (err: unknown)=>{
     if(err instanceof Error)
     {
         const dateTime = moment().format('DD-MM-YYYY_hh-mm-ss_A');
@@ -52,7 +52,7 @@ const createOrder = async (order: CreateOrderInterface)=>{
     }
     catch(err)
     {
-        return createLog(err, "order")
+        return createLog(err)
     }
 }
 
@@ -64,7 +64,7 @@ const deleteCarts = async (carts: DeleteCartsInterface)=>{
     }
     catch(err)
     {
-        return createLog(err, "delete-cart")
+        return createLog(err)
     }
 }
 
@@ -75,7 +75,7 @@ const createPayment = async (payment: CreatePaymentInterface)=>{
     }
     catch(err)
     {
-        return createLog(err, "payment")
+        return createLog(err)
     }
 }
 

@@ -5,7 +5,7 @@ import {
   NextResponse
 } from "next/server";
 
-export const middleware = async (
+export const proxy = async (
   req: NextRequest
 ) => {
   const session = await getToken({

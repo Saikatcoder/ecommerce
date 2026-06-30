@@ -6,6 +6,8 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse as res } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/route";
 mongoose.connect(db)
+import dns from 'dns'
+dns.setServers(['1.1.1.1','8.8.8.8'])
 
 export const POST = async (req: NextRequest)=>{
     try {

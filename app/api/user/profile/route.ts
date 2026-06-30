@@ -1,6 +1,8 @@
 import mongoose from 'mongoose'
 const db = `${process.env.DB_URL}/${process.env.DB_NAME}`
 mongoose.connect(db)
+import dns from 'dns'
+dns.setServers(['1.1.1.1','8.8.8.8'])
 
 import ServerCatchError from '@/lib/server-catch-error';
 import { NextRequest , NextResponse as res } from "next/server";

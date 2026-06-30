@@ -1,6 +1,8 @@
 const db = `${process.env.DB_URL}/${process.env.DB_NAME}`
 import mongoose from "mongoose";
 mongoose.connect(db)
+import dns from 'dns'
+dns.setServers(['1.1.1.1','8.8.8.8'])
 
 import {v4 as uuid} from 'uuid'
 import serverCatchError from "@/lib/server-catch-error";

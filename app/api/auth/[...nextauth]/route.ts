@@ -1,6 +1,7 @@
 import axios from "axios"
 import NextAuth, {
   NextAuthOptions,
+  Session,
 } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
@@ -32,15 +33,13 @@ export const authOptions: NextAuthOptions = {
             password: credentials?.password
           }
 
-          const { data } =
-            await axios.post(
-              `${process.env.SERVER}/api/user/login`,
-              payload
-            )
+          const { data } =await axios.post(`${process.env.SERVER}/api/user/login`,payload)
 
           return data
-        } catch {
-          return null
+        } catch (error : unknown){
+          if (error instanceof Error) {
+                throw new Error(error.message)
+             }
         }
       }
     }),
@@ -78,12 +77,7 @@ export const authOptions: NextAuthOptions = {
             provider: 'google'
           }
 
-          const { data } =
-            await axios.post(
-              `${process.env.SERVER}/api/user/login`,
-              payload
-            )
-
+          const { data } = await axios.post(`${process.env.SERVER}/api/user/login`,payload)
           user.id = data.id
           user.email = data.email
           user.name = data.name
@@ -91,20 +85,17 @@ export const authOptions: NextAuthOptions = {
           user.address = data.address  
           return true
 
-        } catch {
-          return false
+        } catch(err: unknown) {
+          if(err instanceof Error){
+            return false
+          }
         }
       }
 
       return true
     },
 
-    async jwt({
-      token,
-      user
-    }) {
-    
-
+    async jwt({token,user}) {
       if (user) {
         token.id = user.id
         token.role =user.role
@@ -123,7 +114,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id =token.id as string
         session.user.role =token.role as string
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        session.user.address = token.address as any
+        session.user.address = token.address as Session['user']['address']
       }
 
       return session

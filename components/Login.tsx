@@ -6,6 +6,8 @@ import {
   Divider,
   Form,
   Input,
+  message,
+  Modal,
 } from 'antd'
 import Image from 'next/image'
 import Logo from './shared/logo'
@@ -25,38 +27,70 @@ const [loading, setLoading] = useState(false)
 
 const router = useRouter()
 
-  const login = async (value: any) => {
-   try {
+const login = async (value:any)=>{
+  try {
     setLoading(true)
-      const payload ={
+
+    const payload = {
       ...value,
-      redirect: false,
+      redirect:false
     }
-   await signIn('credentials',payload)
-  const session = await getSession()
-console.log(session)
-  if(!session)
-    throw new Error("failed to login user")
 
-  if(session.user.role === 'user')
-   return router.replace('/')
+    const res = await signIn(
+      'credentials',
+      payload
+    )
 
-  
-  if(session.user.role === 'admin' ||  session.user.role === 'superadmin')
-   {
-    console.log("redirect admin")
-    return router.replace('/admin/orders')
-  }
+    if(res?.error){
+      throw new Error(res.error)
+    }
 
-  
+    const session = await getSession()
 
-   } catch (error) {
+    if(!session){
+      throw new Error("Login failed")
+    }
+
+    if(session.user.role === 'user'){
+      return router.replace('/')
+    }
+
+    if(
+      session.user.role === 'admin' ||
+      session.user.role === 'superadmin'
+    ){
+      return router.replace('/admin/orders')
+    }
+
+  } catch(error:any){
+    // blocked user message
+    if(
+      error.message.includes("blocked")
+    ){
+     Modal.error({
+         title: "Account Blocked",
+         content:"Your account has been blocked by Super Admin. Please contact superadmin@gmail.com",
+         okText: "OK"
+        })
+      return
+    }
+
+    // wrong password
+    if(
+      error.message.includes("Invalid")
+    ){
+      message.error(
+        "Incorrect email or password"
+      )
+      return
+    }
+
     ClientCatchError(error)
-  }
-  finally{
+
+  } finally{
     setLoading(false)
   }
-  }
+}
 
 
   const signInwithGoogle = async()=>{
@@ -67,7 +101,7 @@ console.log(session)
       }
 
      const res = await signIn('google',payload)
-     console.log(res)
+   
     } catch (error) {
       ClientCatchError(error)
     }

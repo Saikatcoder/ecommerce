@@ -64,6 +64,8 @@ const Order = () => {
         return 'orange'
       case 'dispatched':
         return 'blue'
+      case 'delivered':
+        return 'green'
       case 'returned':
         return 'red'
       default:
@@ -167,6 +169,10 @@ const Order = () => {
 
           <Select.Option value="dispatched">
             Dispatched
+          </Select.Option>
+
+          <Select.Option value="delivered">
+           Delivered
           </Select.Option>
 
           <Select.Option value="returned">

@@ -1,5 +1,6 @@
-const db = `${process.env.DB_URL}/${process.env.DB_NAME}`
 import mongoose from "mongoose";
+import dns from 'dns'
+const db = `${process.env.DB_URL}/${process.env.DB_NAME}`
 mongoose.connect(db)
 
 import {v4 as uuid} from 'uuid'
@@ -11,6 +12,7 @@ import path from 'path'
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
 
+dns.setServers(['1.1.1.1','8.8.8.8'])
 
 export const POST = async (req: NextRequest) => {
   try {

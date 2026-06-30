@@ -1,7 +1,8 @@
 const db = `${process.env.DB_URL}/${process.env.DB_NAME}`
 import mongoose from "mongoose";
 mongoose.connect(db)
-
+import dns from 'dns'
+dns.setServers(['1.1.1.1','8.8.8.8'])
 
 import serverCatchError from "@/lib/server-catch-error";
 import { NextRequest, NextResponse as res } from "next/server";
@@ -45,7 +46,7 @@ export const PUT = async (req: NextRequest, context: SlugInterface)=>{
 )
    return res.json({message:"unauthorized"},{status:401})
 
-        const {slug: id} = context.params
+        const {slug: id} = await context.params
         const body = await req.json()
         const product = await ProductModel.findByIdAndUpdate(id, body, {new: true})
 
@@ -75,7 +76,7 @@ export const DELETE = async (req: NextRequest, context: SlugInterface)=>{
 )
    return res.json({message:"unauthorized"},{status:401})
 
-        const {slug: id} = context.params
+        const {slug: id} = await context.params
         const product = await ProductModel.findByIdAndDelete(id)
 
         if(!product)

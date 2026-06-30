@@ -7,7 +7,8 @@ import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { MongoClient } from 'mongodb'
 import bcrypt from 'bcrypt'
-
+import dns from 'dns'
+dns.setServers(["1.1.1.1", "8.8.8.8"])
 /* =========================
    Role Select Options
 ========================= */
@@ -19,6 +20,7 @@ const promptOptions = [
     message: 'Press arrow up and down key to choose role.',
     choices: [
       chalk.green('user'),
+      chalk.blue('SuperAdmin'),
       chalk.blue('Admin'),
       chalk.red('Exit')
     ]
@@ -55,9 +57,7 @@ const passwordValidation = (password) => {
   return 'Password must contain uppercase, lowercase, number & special character'
 }
 
-/* =========================
-   User Inputs
-========================= */
+
 
 const inputOptions = [
   {
@@ -105,14 +105,7 @@ const inputOptions = [
   }
 ]
 
-/* =========================
-   Create User/Admin
-========================= */
-
-const createRole = async (
-  role,
-  db
-) => {
+const createRole = async (role,db) => {
   try {
     const input =
       await inquirer.prompt(
@@ -141,7 +134,7 @@ const createRole = async (
 
     log(
       chalk.green(
-        `✅ ${role} has been created`
+        `${role} has been created`
       )
     )
 
@@ -173,6 +166,9 @@ const welcome = async (db) => {
 
   if (role.includes('user'))
     return createRole('user',db)
+
+  if (role.includes('SuperAdmin'))
+    return createRole('superadmin',db)
 
   if (role.includes('Admin'))
     return createRole('admin',db)

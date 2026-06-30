@@ -1,6 +1,10 @@
 import Products from "@/components/Products"
 
 
+interface DataInterface {
+  products :[]
+}
+
 export const metadata ={
   title: `Ecart - ${process.env.DOMAIN}`,
   description : 'India`s best and affordable ecommerce website',

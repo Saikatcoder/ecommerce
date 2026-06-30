@@ -9,6 +9,8 @@ import UserModel from "@/models/user.model";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 mongoose.connect(db);
+import dns from 'dns'
+dns.setServers(['1.1.1.1','8.8.8.8'])
 
 export const PUT = async (
   req: NextRequest,

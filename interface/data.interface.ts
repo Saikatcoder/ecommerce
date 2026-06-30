@@ -1,4 +1,4 @@
-interface DataInterface ={
+interface DataInterface {
     data:any
 }
 
